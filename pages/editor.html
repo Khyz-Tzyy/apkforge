@@ -1,558 +1,286 @@
-/* ==========================================
-   APKFORGE - Editor Logic
-   ========================================== */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>APKForge — Editor</title>
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/editor.css" />
+</head>
+<body class="noise">
 
-/* ── State ── */
-const EditorState = {
-  files: {
-    'lib/main.dart': `import 'package:flutter/material.dart';
+  <div class="editor-layout">
 
-void main() {
-  runApp(const MyApp());
-}
+    <!-- Top Bar -->
+    <div class="editor-topbar">
+      <div class="editor-topbar-left">
+        <a href="dashboard.html" class="editor-logo">
+          <svg viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="8" fill="#00d4ff" fill-opacity="0.1"/>
+            <path d="M8 24L16 8L24 24" stroke="#00d4ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10.5 19H21.5" stroke="#00d4ff" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="22" cy="10" r="3" fill="#ff6b35"/>
+          </svg>
+          APK<span class="logo-dot">Forge</span>
+        </a>
+        <div style="color:var(--text-muted);font-size:0.75rem">/</div>
+        <input type="text" class="project-name-input" id="project-name" value="my_flutter_app" placeholder="project_name" />
+      </div>
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+      <div class="editor-topbar-center">
+        <span class="badge badge-warning" style="font-size:0.65rem">
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+          Early Dev
+        </span>
+        <span id="save-status" style="font-size:0.74rem;color:var(--text-muted)">All changes saved</span>
+      </div>
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'My Flutter App',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(),
-    );
-  }
-}
+      <div class="editor-topbar-right">
+        <button class="btn btn-ghost btn-sm" onclick="togglePanel('preview')" title="Toggle Preview">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          Preview
+        </button>
+        <button class="btn btn-ghost btn-sm" onclick="togglePanel('build')" title="Toggle Build">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
+          Build
+        </button>
+        <a href="dashboard.html" class="btn btn-ghost btn-sm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+      </div>
+    </div>
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+    <!-- Editor Body -->
+    <div class="editor-body">
 
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
+      <!-- File Tree -->
+      <div class="filetree-panel" id="filetree-panel">
+        <div class="panel-header">
+          <span class="panel-title">Explorer</span>
+          <div class="panel-actions">
+            <button class="icon-btn" title="New File" onclick="showNewFileModal()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
+            </button>
+            <button class="icon-btn" title="New Folder" onclick="showNewFolderModal()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
+            </button>
+            <button class="icon-btn" title="Collapse All" onclick="collapseAll()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15,18 9,12 15,6"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="filetree" id="filetree"></div>
+      </div>
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+      <div class="resizer" id="resizer-left"></div>
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+      <!-- Code Panel -->
+      <div class="code-panel" id="code-panel">
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('My App'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('You have pushed the button:'),
-            Text(
-              '\$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        child: const Icon(Icons.add),
-      ),
-    );
-  }
-}`,
-    'pubspec.yaml': `name: my_flutter_app
-description: A new Flutter project.
-version: 1.0.0+1
+        <!-- Tabs -->
+        <div class="editor-tabs" id="editor-tabs">
+          <div style="padding:0 10px;display:flex;align-items:center;color:var(--text-muted);font-size:0.75rem">
+            No file open
+          </div>
+        </div>
 
-environment:
-  sdk: '>=3.0.0 <4.0.0'
+        <!-- Code Area -->
+        <div class="code-area">
+          <div class="line-numbers" id="line-numbers"></div>
+          <div class="code-editor-wrap">
+            <textarea
+              class="code-editor"
+              id="code-editor"
+              spellcheck="false"
+              autocorrect="off"
+              autocapitalize="off"
+              placeholder="// Select a file to start editing..."
+            ></textarea>
+          </div>
+        </div>
 
-dependencies:
-  flutter:
-    sdk: flutter
-  cupertino_icons: ^1.0.6
+        <!-- Status Bar -->
+        <div class="status-bar">
+          <div class="status-left">
+            <span class="status-item">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16,18 22,12 16,6"/><polyline points="8,6 2,12 8,18"/></svg>
+              <span id="status-lang">Dart</span>
+            </span>
+            <span class="status-item" id="status-cursor">Ln 1, Col 1</span>
+          </div>
+          <div class="status-right">
+            <span class="status-item">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+              Flutter 3.x
+            </span>
+            <span class="status-item">UTF-8</span>
+            <span class="status-item">Spaces: 2</span>
+          </div>
+        </div>
+      </div>
 
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  flutter_lints: ^3.0.0
+      <div class="resizer" id="resizer-right"></div>
 
-flutter:
-  uses-material-design: true`,
-    'README.md': `# my_flutter_app
-
-A new Flutter project built with APKForge.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-`,
-    'lib/screens/home_screen.dart': `import 'package:flutter/material.dart';
-
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Home Screen'),
-      ),
-    );
-  }
-}`,
-    'lib/widgets/custom_button.dart': `import 'package:flutter/material.dart';
-
-class CustomButton extends StatelessWidget {
-  final String label;
-  final VoidCallback onPressed;
-
-  const CustomButton({
-    super.key,
-    required this.label,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      child: Text(label),
-    );
-  }
-}`,
-  },
-  openTabs: ['lib/main.dart'],
-  activeTab: 'lib/main.dart',
-  contextTarget: null,
-  buildRunning: false,
-};
-
-/* ── File Icons ── */
-function getFileIcon(name) {
-  const ext = name.split('.').pop();
-  const icons = {
-    dart: `<svg class="tree-dart" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16,18 22,12 16,6"/><polyline points="8,6 2,12 8,18"/></svg>`,
-    yaml: `<svg class="tree-yaml" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>`,
-    json: `<svg class="tree-json" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>`,
-    md: `<svg class="tree-md" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>`,
-  };
-  return icons[ext] || `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>`;
-}
-
-function getFolderIcon() {
-  return `<svg class="tree-folder" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>`;
-}
-
-/* ── Build File Tree ── */
-function buildFileTree() {
-  const tree = {};
-  Object.keys(EditorState.files).forEach(path => {
-    const parts = path.split('/');
-    let node = tree;
-    parts.forEach((part, i) => {
-      if (i < parts.length - 1) {
-        node[part] = node[part] || { __type: 'folder', __children: {} };
-        node = node[part].__children;
-      } else {
-        node[part] = { __type: 'file', __path: path };
-      }
-    });
-  });
-  return tree;
-}
-
-function renderTree(node, container, depth = 0) {
-  const folders = [];
-  const files = [];
-
-  Object.entries(node).forEach(([name, val]) => {
-    if (val.__type === 'folder') folders.push([name, val]);
-    else files.push([name, val]);
-  });
-
-  folders.sort((a, b) => a[0].localeCompare(b[0]));
-  files.sort((a, b) => a[0].localeCompare(b[0]));
-
-  [...folders, ...files].forEach(([name, val]) => {
-    if (val.__type === 'folder') {
-      const wrapper = document.createElement('div');
-
-      const item = document.createElement('div');
-      item.className = 'tree-item';
-      item.style.paddingLeft = `${10 + depth * 12}px`;
-      item.innerHTML = `
-        <svg class="tree-folder-toggle open" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9,18 15,12 9,6"/></svg>
-        ${getFolderIcon()}
-        <span class="tree-item-name">${name}</span>
-      `;
-
-      const children = document.createElement('div');
-      children.className = 'tree-children';
-      renderTree(val.__children, children, depth + 1);
-
-      item.addEventListener('click', () => {
-        const toggle = item.querySelector('.tree-folder-toggle');
-        toggle.classList.toggle('open');
-        children.classList.toggle('hidden');
-      });
-
-      item.addEventListener('contextmenu', (e) => {
-        e.preventDefault();
-        showContextMenu(e, name);
-      });
-
-      wrapper.appendChild(item);
-      wrapper.appendChild(children);
-      container.appendChild(wrapper);
-    } else {
-      const item = document.createElement('div');
-      item.className = 'tree-item' + (val.__path === EditorState.activeTab ? ' active' : '');
-      item.dataset.path = val.__path;
-      item.style.paddingLeft = `${10 + depth * 12}px`;
-      item.innerHTML = `
-        ${getFileIcon(name)}
-        <span class="tree-item-name">${name}</span>
-        <div class="tree-item-actions">
-          <button class="icon-btn" title="Rename" onclick="event.stopPropagation(); showRenameModal('${val.__path}')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      <!-- Right Panel -->
+      <div class="right-panel" id="right-panel">
+        <div class="right-panel-tabs">
+          <button class="right-panel-tab active" onclick="switchRightTab('preview', this)">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:4px"><rect x="5" y="2" width="14" height="20" rx="2"/></svg>
+            Preview
+          </button>
+          <button class="right-panel-tab" onclick="switchRightTab('build', this)">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:4px"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
+            Build
+          </button>
+          <button class="right-panel-tab" onclick="switchRightTab('log', this)">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:4px"><polyline points="4,17 10,11 4,5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+            Log
           </button>
         </div>
-      `;
 
-      item.addEventListener('click', () => openFile(val.__path));
-      item.addEventListener('contextmenu', (e) => {
-        e.preventDefault();
-        showContextMenu(e, val.__path);
-      });
+        <!-- Preview Tab -->
+        <div class="right-panel-content active" id="tab-preview">
+          <div class="preview-frame-wrap">
+            <div class="preview-phone">
+              <div class="preview-phone-notch"></div>
+              <div class="preview-phone-screen" id="preview-screen">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                <div>Preview will appear<br>after build</div>
+              </div>
+            </div>
+            <p class="preview-note">
+              Live preview is generated after a successful build. Code changes are reflected on next build.
+            </p>
+          </div>
+        </div>
 
-      container.appendChild(item);
-    }
-  });
-}
+        <!-- Build Tab -->
+        <div class="right-panel-content" id="tab-build">
+          <div class="build-config">
+            <div class="build-field">
+              <label>App Name</label>
+              <input type="text" class="build-input" id="build-app-name" value="My Flutter App" placeholder="My App" />
+            </div>
+            <div class="build-field">
+              <label>Package ID</label>
+              <input type="text" class="build-input" id="build-package" value="com.example.myapp" placeholder="com.example.app" />
+            </div>
+            <div class="build-field">
+              <label>Version Name</label>
+              <input type="text" class="build-input" id="build-version" value="1.0.0" placeholder="1.0.0" />
+            </div>
+            <div class="build-field">
+              <label>Version Code</label>
+              <input type="number" class="build-input" id="build-vcode" value="1" min="1" />
+            </div>
+            <div class="build-field">
+              <label>Flutter Version</label>
+              <select class="build-input" id="build-flutter">
+                <option value="3.24">Flutter 3.24 (stable)</option>
+                <option value="3.22">Flutter 3.22</option>
+                <option value="3.19">Flutter 3.19</option>
+              </select>
+            </div>
+            <button class="build-btn" id="build-btn" onclick="startBuild()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5,3 19,12 5,21"/></svg>
+              Build APK
+            </button>
+          </div>
 
-function refreshTree() {
-  const container = document.getElementById('filetree');
-  container.innerHTML = '';
-  const tree = buildFileTree();
-  renderTree(tree, container);
-}
+          <!-- Build Progress -->
+          <div id="build-progress" style="padding:12px 14px;display:none;flex-direction:column;gap:8px;border-bottom:1px solid var(--border)">
+            <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.78rem">
+              <span style="color:var(--text-secondary)" id="build-step-label">Initializing...</span>
+              <span style="color:var(--text-muted)" id="build-pct">0%</span>
+            </div>
+            <div style="height:4px;background:var(--bg-elevated);border-radius:2px;overflow:hidden">
+              <div id="build-progress-bar" style="height:100%;background:linear-gradient(90deg,var(--accent),#0099cc);width:0%;transition:width 0.4s ease;border-radius:2px"></div>
+            </div>
+          </div>
 
-/* ── Tabs ── */
-function refreshTabs() {
-  const tabsEl = document.getElementById('editor-tabs');
-  if (EditorState.openTabs.length === 0) {
-    tabsEl.innerHTML = `<div style="padding:0 10px;display:flex;align-items:center;color:var(--text-muted);font-size:0.75rem">No file open</div>`;
-    return;
-  }
+          <!-- Download Bar -->
+          <div class="download-bar" id="download-bar">
+            <div style="display:flex;align-items:center;gap:8px;font-size:0.78rem">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg>
+              <span style="color:var(--success);font-weight:700">Build successful!</span>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="downloadAPK()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download APK
+            </button>
+            <p style="font-size:0.7rem;color:var(--text-muted);text-align:center">Available for 7 days</p>
+          </div>
+        </div>
 
-  tabsEl.innerHTML = EditorState.openTabs.map(path => {
-    const name = path.split('/').pop();
-    const active = path === EditorState.activeTab;
-    return `
-      <div class="editor-tab ${active ? 'active' : ''}" onclick="openFile('${path}')">
-        ${getFileIcon(name)}
-        ${name}
-        <button class="editor-tab-close" onclick="event.stopPropagation(); closeTab('${path}')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
+        <!-- Log Tab -->
+        <div class="right-panel-content" id="tab-log">
+          <div class="build-log-wrap" id="build-log">
+            <div class="log-empty">
+              No build logs yet.<br>Start a build to see output here.
+            </div>
+          </div>
+        </div>
       </div>
-    `;
-  }).join('');
-}
 
-/* ── Open / Close File ── */
-function openFile(path) {
-  if (!EditorState.files[path] && EditorState.files[path] !== '') return;
-  if (!EditorState.openTabs.includes(path)) {
-    EditorState.openTabs.push(path);
-  }
-  EditorState.activeTab = path;
+    </div>
+  </div>
 
-  const editor = document.getElementById('code-editor');
-  editor.value = EditorState.files[path];
+  <!-- Context Menu -->
+  <div class="context-menu" id="context-menu">
+    <button class="context-item" onclick="ctxRename()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      Rename
+    </button>
+    <button class="context-item" onclick="ctxNewFile()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
+      New File
+    </button>
+    <div class="context-divider"></div>
+    <button class="context-item danger" onclick="ctxDelete()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+      Delete
+    </button>
+  </div>
 
-  const ext = path.split('.').pop();
-  const langMap = { dart: 'Dart', yaml: 'YAML', json: 'JSON', md: 'Markdown', js: 'JavaScript' };
-  document.getElementById('status-lang').textContent = langMap[ext] || ext.toUpperCase();
+  <!-- New File Modal -->
+  <div class="modal-overlay" id="modal-newfile">
+    <div class="modal">
+      <div class="modal-title">New File</div>
+      <input type="text" class="modal-input" id="modal-newfile-input" placeholder="filename.dart" />
+      <div class="modal-actions">
+        <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-newfile')">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="confirmNewFile()">Create</button>
+      </div>
+    </div>
+  </div>
 
-  refreshTabs();
-  refreshTree();
-  updateLineNumbers();
-}
+  <!-- New Folder Modal -->
+  <div class="modal-overlay" id="modal-newfolder">
+    <div class="modal">
+      <div class="modal-title">New Folder</div>
+      <input type="text" class="modal-input" id="modal-newfolder-input" placeholder="folder_name" />
+      <div class="modal-actions">
+        <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-newfolder')">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="confirmNewFolder()">Create</button>
+      </div>
+    </div>
+  </div>
 
-function closeTab(path) {
-  EditorState.openTabs = EditorState.openTabs.filter(t => t !== path);
-  if (EditorState.activeTab === path) {
-    EditorState.activeTab = EditorState.openTabs[EditorState.openTabs.length - 1] || null;
-    if (EditorState.activeTab) {
-      openFile(EditorState.activeTab);
-    } else {
-      document.getElementById('code-editor').value = '';
-      updateLineNumbers();
-    }
-  }
-  refreshTabs();
-}
+  <!-- Rename Modal -->
+  <div class="modal-overlay" id="modal-rename">
+    <div class="modal">
+      <div class="modal-title">Rename</div>
+      <input type="text" class="modal-input" id="modal-rename-input" placeholder="new_name" />
+      <div class="modal-actions">
+        <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-rename')">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="confirmRename()">Rename</button>
+      </div>
+    </div>
+  </div>
 
-/* ── Line Numbers ── */
-function updateLineNumbers() {
-  const editor = document.getElementById('code-editor');
-  const lines = editor.value.split('\n').length;
-  const ln = document.getElementById('line-numbers');
-  ln.innerHTML = Array.from({ length: lines }, (_, i) =>
-    `<span>${i + 1}</span>`
-  ).join('');
-}
+  <script src="js/core/auth.js"></script>
+  <script src="js/editor.js"></script>
 
-/* ── Cursor Position ── */
-function updateCursor() {
-  const editor = document.getElementById('code-editor');
-  const val = editor.value.substring(0, editor.selectionStart);
-  const lines = val.split('\n');
-  const ln = lines.length;
-  const col = lines[lines.length - 1].length + 1;
-  document.getElementById('status-cursor').textContent = `Ln ${ln}, Col ${col}`;
-}
-
-/* ── Save ── */
-let saveTimeout;
-function autoSave() {
-  const editor = document.getElementById('code-editor');
-  if (EditorState.activeTab) {
-    EditorState.files[EditorState.activeTab] = editor.value;
-  }
-  document.getElementById('save-status').textContent = 'Saving...';
-  clearTimeout(saveTimeout);
-  saveTimeout = setTimeout(() => {
-    document.getElementById('save-status').textContent = 'All changes saved';
-  }, 800);
-  updateLineNumbers();
-  updateCursor();
-}
-
-/* ── Tab Key ── */
-document.getElementById('code-editor').addEventListener('keydown', (e) => {
-  if (e.key === 'Tab') {
-    e.preventDefault();
-    const editor = e.target;
-    const start = editor.selectionStart;
-    const end = editor.selectionEnd;
-    editor.value = editor.value.substring(0, start) + '  ' + editor.value.substring(end);
-    editor.selectionStart = editor.selectionEnd = start + 2;
-    autoSave();
-  }
-});
-
-document.getElementById('code-editor').addEventListener('input', autoSave);
-document.getElementById('code-editor').addEventListener('click', updateCursor);
-document.getElementById('code-editor').addEventListener('keyup', updateCursor);
-
-/* ── Right Panel Tabs ── */
-function switchRightTab(tab, btn) {
-  document.querySelectorAll('.right-panel-content').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.right-panel-tab').forEach(el => el.classList.remove('active'));
-  document.getElementById('tab-' + tab).classList.add('active');
-  btn.classList.add('active');
-}
-
-function togglePanel(tab) {
-  const panel = document.getElementById('right-panel');
-  const tabBtn = [...document.querySelectorAll('.right-panel-tab')].find(b => b.textContent.trim().toLowerCase().startsWith(tab));
-  const content = document.getElementById('tab-' + tab);
-  const isActive = content.classList.contains('active');
-  if (isActive) {
-    panel.style.display = panel.style.display === 'none' ? 'flex' : 'none';
-  } else {
-    panel.style.display = 'flex';
-    if (tabBtn) switchRightTab(tab, tabBtn);
-  }
-}
-
-/* ── Context Menu ── */
-function showContextMenu(e, path) {
-  EditorState.contextTarget = path;
-  const menu = document.getElementById('context-menu');
-  menu.style.left = e.clientX + 'px';
-  menu.style.top = e.clientY + 'px';
-  menu.classList.add('visible');
-}
-
-function hideContextMenu() {
-  document.getElementById('context-menu').classList.remove('visible');
-}
-
-document.addEventListener('click', hideContextMenu);
-
-function ctxRename() {
-  showRenameModal(EditorState.contextTarget);
-}
-
-function ctxNewFile() {
-  showNewFileModal();
-}
-
-function ctxDelete() {
-  if (!EditorState.contextTarget) return;
-  if (confirm(`Delete "${EditorState.contextTarget}"?`)) {
-    delete EditorState.files[EditorState.contextTarget];
-    closeTab(EditorState.contextTarget);
-    refreshTree();
-  }
-}
-
-/* ── Modals ── */
-function showNewFileModal() {
-  document.getElementById('modal-newfile-input').value = '';
-  document.getElementById('modal-newfile').classList.add('visible');
-  setTimeout(() => document.getElementById('modal-newfile-input').focus(), 100);
-}
-
-function showNewFolderModal() {
-  document.getElementById('modal-newfolder-input').value = '';
-  document.getElementById('modal-newfolder').classList.add('visible');
-  setTimeout(() => document.getElementById('modal-newfolder-input').focus(), 100);
-}
-
-function showRenameModal(path) {
-  EditorState.contextTarget = path;
-  const name = path.split('/').pop();
-  document.getElementById('modal-rename-input').value = name;
-  document.getElementById('modal-rename').classList.add('visible');
-  setTimeout(() => document.getElementById('modal-rename-input').focus(), 100);
-}
-
-function closeModal(id) {
-  document.getElementById(id).classList.remove('visible');
-}
-
-function confirmNewFile() {
-  const name = document.getElementById('modal-newfile-input').value.trim();
-  if (!name) return;
-  const path = 'lib/' + name;
-  EditorState.files[path] = '';
-  closeModal('modal-newfile');
-  refreshTree();
-  openFile(path);
-}
-
-function confirmNewFolder() {
-  const name = document.getElementById('modal-newfolder-input').value.trim();
-  if (!name) return;
-  const placeholder = `lib/${name}/.gitkeep`;
-  EditorState.files[placeholder] = '';
-  closeModal('modal-newfolder');
-  refreshTree();
-}
-
-function confirmRename() {
-  const newName = document.getElementById('modal-rename-input').value.trim();
-  if (!newName || !EditorState.contextTarget) return;
-  const parts = EditorState.contextTarget.split('/');
-  parts[parts.length - 1] = newName;
-  const newPath = parts.join('/');
-  EditorState.files[newPath] = EditorState.files[EditorState.contextTarget];
-  delete EditorState.files[EditorState.contextTarget];
-  if (EditorState.activeTab === EditorState.contextTarget) EditorState.activeTab = newPath;
-  const tabIdx = EditorState.openTabs.indexOf(EditorState.contextTarget);
-  if (tabIdx !== -1) EditorState.openTabs[tabIdx] = newPath;
-  closeModal('modal-rename');
-  refreshTree();
-  refreshTabs();
-}
-
-function collapseAll() {
-  document.querySelectorAll('.tree-children').forEach(el => el.classList.add('hidden'));
-  document.querySelectorAll('.tree-folder-toggle').forEach(el => el.classList.remove('open'));
-}
-
-/* ── Build ── */
-const buildSteps = [
-  { label: 'Resolving dependencies...', pct: 10, delay: 600 },
-  { label: 'Running pub get...', pct: 22, delay: 900 },
-  { label: 'Analyzing project...', pct: 35, delay: 700 },
-  { label: 'Compiling Dart code...', pct: 50, delay: 1200 },
-  { label: 'Building Flutter app...', pct: 65, delay: 1000 },
-  { label: 'Generating APK...', pct: 80, delay: 1100 },
-  { label: 'Signing APK...', pct: 92, delay: 700 },
-  { label: 'Uploading to storage...', pct: 98, delay: 600 },
-  { label: 'Build complete!', pct: 100, delay: 400 },
-];
-
-function addLog(text, type = '') {
-  const log = document.getElementById('build-log');
-  const empty = log.querySelector('.log-empty');
-  if (empty) empty.remove();
-  const now = new Date();
-  const time = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
-  const line = document.createElement('div');
-  line.className = 'log-line';
-  line.innerHTML = `<span class="log-time">${time}</span><span class="log-text ${type}">${text}</span>`;
-  log.appendChild(line);
-  log.scrollTop = log.scrollHeight;
-}
-
-async function startBuild() {
-  if (EditorState.buildRunning) return;
-  EditorState.buildRunning = true;
-
-  const btn = document.getElementById('build-btn');
-  const progress = document.getElementById('build-progress');
-  const downloadBar = document.getElementById('download-bar');
-  const appName = document.getElementById('build-app-name').value || 'MyApp';
-
-  btn.disabled = true;
-  btn.innerHTML = `<div class="spinner"></div> Building...`;
-  progress.style.display = 'flex';
-  downloadBar.classList.remove('visible');
-
-  // Switch to log tab
-  const logTab = document.querySelectorAll('.right-panel-tab')[2];
-  switchRightTab('log', logTab);
-
-  addLog(`Starting build for "${appName}"`, 'info');
-  addLog(`Flutter version: ${document.getElementById('build-flutter').value}`, 'muted');
-  addLog(`Package: ${document.getElementById('build-package').value}`, 'muted');
-  addLog(`Version: ${document.getElementById('build-version').value}+${document.getElementById('build-vcode').value}`, 'muted');
-  addLog('---', 'muted');
-
-  for (const step of buildSteps) {
-    await new Promise(r => setTimeout(r, step.delay));
-    document.getElementById('build-step-label').textContent = step.label;
-    document.getElementById('build-pct').textContent = step.pct + '%';
-    document.getElementById('build-progress-bar').style.width = step.pct + '%';
-    addLog(step.label, step.pct === 100 ? 'success' : '');
-  }
-
-  addLog(`APK ready: ${appName.replace(/\s+/g,'_').toLowerCase()}-release.apk`, 'success');
-  addLog('Stored for 7 days. Download before it expires.', 'muted');
-
-  btn.disabled = false;
-  btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><polygon points="5,3 19,12 5,21"/></svg> Build APK`;
-  progress.style.display = 'none';
-  downloadBar.classList.add('visible');
-  EditorState.buildRunning = false;
-
-  // Switch to build tab to show download
-  const buildTab = document.querySelectorAll('.right-panel-tab')[1];
-  switchRightTab('build', buildTab);
-}
-
-function downloadAPK() {
-  addLog('Download initiated by user.', 'info');
-  alert('APK download will work when backend is connected. Coming soon!');
-}
-
-/* ── Init ── */
-refreshTree();
-openFile('lib/main.dart');
+</body>
+</html>
