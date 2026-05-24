@@ -2,35 +2,8 @@
    APKFORGE - Projects Logic
    ========================================== */
 
-/* ── Mock Data ── */
-let projects = [
-  {
-    id: '1',
-    name: 'my_flutter_app',
-    package: 'com.example.myapp',
-    desc: 'Starter Flutter project',
-    version: '1.0.0',
-    createdAt: Date.now() - 86400000 * 2,
-    lastBuild: Date.now() - 3600000 * 2,
-    buildHistory: ['success', 'success', 'failed'],
-    lastStatus: 'success',
-    downloads: 1,
-    apkSize: '12.4 MB',
-  },
-  {
-    id: '2',
-    name: 'test_project',
-    package: 'com.khyz.test',
-    desc: 'Testing new UI components',
-    version: '0.1.0',
-    createdAt: Date.now() - 86400000,
-    lastBuild: Date.now() - 86400000,
-    buildHistory: ['failed'],
-    lastStatus: 'failed',
-    downloads: 0,
-    apkSize: null,
-  },
-];
+/* ── Data (akan diisi dari Supabase nanti) ── */
+let projects = [];
 
 let currentView = 'grid';
 let contextProjectId = null;
@@ -248,6 +221,11 @@ function showProjectMenu(e, id) {
 
 document.addEventListener('click', () => {
   document.getElementById('project-context-menu').classList.remove('visible');
+});
+
+document.addEventListener('touchstart', (e) => {
+  const menu = document.getElementById('project-context-menu');
+  if (!menu.contains(e.target)) menu.classList.remove('visible');
 });
 
 function ctxOpenEditor() { if (contextProjectId) openProject(contextProjectId); }
