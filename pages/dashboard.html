@@ -270,13 +270,13 @@
       document.getElementById('user-name').textContent = username;
       document.getElementById('user-avatar').textContent = username[0].toUpperCase();
 
-      // Mock stats
-      const buildsUsed = 2;
+      // Mock stats — akan diganti Supabase nanti
+      const buildsUsed = 0;
       document.getElementById('builds-used').textContent = buildsUsed;
       document.getElementById('bar-used').textContent = buildsUsed;
-      document.getElementById('projects-count').textContent = 1;
-      document.getElementById('success-builds').textContent = 2;
-      document.getElementById('downloads-count').textContent = 1;
+      document.getElementById('projects-count').textContent = 0;
+      document.getElementById('success-builds').textContent = 0;
+      document.getElementById('downloads-count').textContent = 0;
 
       // Limit bar
       const pct = (buildsUsed / 7) * 100;
@@ -285,11 +285,8 @@
       if (pct >= 86) bar.classList.add('danger');
       else if (pct >= 57) bar.classList.add('warning');
 
-      // Mock recent builds
-      const builds = [
-        { name: 'my_flutter_app', status: 'success', time: '2 hours ago', version: 'v1.0.0' },
-        { name: 'test_project', status: 'failed', time: '1 day ago', version: 'v0.1.0' },
-      ];
+      // Mock recent builds — akan diganti Supabase nanti
+      const builds = [];
 
       if (builds.length > 0) {
         const list = document.getElementById('builds-list');
