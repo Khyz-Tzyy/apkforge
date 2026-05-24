@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>APKForge — Admin Users</title>
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body class="noise">
+
+  <div class="app-layout">
+    <aside class="sidebar admin-sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="../../index.html" class="sidebar-logo">
+          <svg viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="8" fill="#ff6b35" fill-opacity="0.1"/>
+            <path d="M8 24L16 8L24 24" stroke="#ff6b35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10.5 19H21.5" stroke="#ff6b35" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="22" cy="10" r="3" fill="#00d4ff"/>
+          </svg>
+          APK<span style="color:var(--accent-2)">Forge</span>
+        </a>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Admin</div>
+        <a href="index.html" class="nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Overview
+        </a>
+        <a href="users.html" class="nav-item active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          Users
+        </a>
+        <a href="builds.html" class="nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
+          Builds
+        </a>
+        <div class="nav-section-label">Account</div>
+        <a href="../dashboard.html" class="nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+          User View
+        </a>
+        <button class="nav-item" onclick="Auth.logout()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Sign Out
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="user-avatar" style="background:var(--accent-2-dim);border-color:rgba(255,107,53,0.3);color:var(--accent-2)">A</div>
+          <div class="user-info">
+            <div class="user-name">Admin</div>
+            <div class="user-plan" style="color:var(--accent-2)">Administrator</div>
+          </div>
+          <span class="admin-badge">ADMIN</span>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-content">
+      <div class="topbar">
+        <div style="display:flex;align-items:center;gap:12px">
+          <button class="btn btn-ghost btn-sm" id="sidebar-toggle" onclick="toggleSidebar()" style="display:none">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <span class="topbar-title">User Management</span>
+        </div>
+        <div class="topbar-actions">
+          <span class="admin-badge">ADMIN PANEL</span>
+        </div>
+      </div>
+
+      <div class="page-content">
+        <div class="page-header animate-fade" style="margin-bottom:20px">
+          <div>
+            <div class="page-title">Users</div>
+            <div class="page-subtitle">Manage registered accounts, limits, and access</div>
+          </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="toolbar" style="margin-bottom:16px">
+          <div class="search-wrap">
+            <div class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+            <input type="text" class="search-input" placeholder="Search users..." oninput="filterUsers(this.value)" />
+          </div>
+          <select class="filter-select" onchange="filterByRole(this.value)">
+            <option value="all">All Roles</option>
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
+          </select>
+          <select class="filter-select" onchange="filterByStatus(this.value)">
+            <option value="all">All Status</option>
+            <option value="active">Active</option>
+            <option value="banned">Banned</option>
+          </select>
+        </div>
+
+        <div class="data-table-wrap animate-fade">
+          <div class="data-table-header">
+            <div class="data-table-title">All Users <span class="badge badge-muted" id="user-count-badge" style="font-size:0.68rem">0 users</span></div>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Role</th>
+                <th>Builds Used</th>
+                <th>Projects</th>
+                <th>Joined</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="users-table-body"></tbody>
+          </table>
+          <div class="pagination">
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9,18 15,12 9,6"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div style="text-align:center;padding:20px 0;font-size:0.74rem;color:var(--text-muted)">
+          APKForge Admin Panel &mdash; <span style="color:var(--accent)">A Khyz Project</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" style="position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px 18px;font-size:0.82rem;color:var(--text-primary);box-shadow:var(--shadow-lg);opacity:0;transition:opacity 0.3s ease;pointer-events:none;"></div>
+
+  <script src="../js/core/auth.js"></script>
+  <script src="../js/admin.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => renderUsersTable(mockUsers));
+    function filterUsers(q) {
+      const list = mockUsers.filter(u =>
+        u.name.toLowerCase().includes(q.toLowerCase()) ||
+        u.email.toLowerCase().includes(q.toLowerCase())
+      );
+      renderUsersTable(list);
+    }
+    function filterByRole(role) { renderUsersTable(role === 'all' ? mockUsers : mockUsers.filter(u => u.role === role)); }
+    function filterByStatus(status) { renderUsersTable(status === 'all' ? mockUsers : mockUsers.filter(u => u.status === status)); }
+  </script>
+</body>
+</html>

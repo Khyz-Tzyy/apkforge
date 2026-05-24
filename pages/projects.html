@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>APKForge — Projects</title>
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="css/projects.css" />
+</head>
+<body class="noise">
+
+  <div class="app-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="sidebar-logo">
+          <svg viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="8" fill="#00d4ff" fill-opacity="0.1"/>
+            <path d="M8 24L16 8L24 24" stroke="#00d4ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10.5 19H21.5" stroke="#00d4ff" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="22" cy="10" r="3" fill="#ff6b35"/>
+          </svg>
+          APK<span class="logo-dot">Forge</span>
+        </a>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+        <a href="projects.html" class="nav-item active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+          Projects
+        </a>
+        <a href="editor.html" class="nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16,18 22,12 16,6"/><polyline points="8,6 2,12 8,18"/></svg>
+          Editor
+          <span class="nav-badge">NEW</span>
+        </a>
+        <a href="analyzer.html" class="nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+          APK Analyzer
+        </a>
+        <div class="nav-section-label">Account</div>
+        <a href="#" class="nav-item" onclick="showToast('Settings coming soon!')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2M12 20v2M20 12h2M2 12h2M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41"/></svg>
+          Settings
+        </a>
+        <button class="nav-item" onclick="Auth.logout()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Sign Out
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="user-avatar" id="user-avatar">U</div>
+          <div class="user-info">
+            <div class="user-name" id="user-name">User</div>
+            <div class="user-plan">Free Plan</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="main-content">
+
+      <!-- Topbar -->
+      <div class="topbar">
+        <div style="display:flex;align-items:center;gap:12px">
+          <button class="btn btn-ghost btn-sm" id="sidebar-toggle" onclick="toggleSidebar()" style="display:none">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <span class="topbar-title">Projects</span>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-primary btn-sm" onclick="showNewProjectModal()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            New Project
+          </button>
+        </div>
+      </div>
+
+      <!-- Page Content -->
+      <div class="page-content">
+
+        <div class="page-header animate-fade">
+          <div>
+            <div class="page-title">My Projects</div>
+            <div class="page-subtitle">Manage your Flutter projects and build history</div>
+          </div>
+          <button class="btn btn-primary" onclick="showNewProjectModal()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            New Project
+          </button>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="projects-stats animate-fade">
+          <div class="projects-stat">
+            <span class="projects-stat-value" id="stat-total">0</span>
+            <span class="projects-stat-label">Total Projects</span>
+          </div>
+          <div style="width:1px;background:var(--border)"></div>
+          <div class="projects-stat">
+            <span class="projects-stat-value text-success" id="stat-success">0</span>
+            <span class="projects-stat-label">Successful Builds</span>
+          </div>
+          <div style="width:1px;background:var(--border)"></div>
+          <div class="projects-stat">
+            <span class="projects-stat-value text-accent" id="stat-downloads">0</span>
+            <span class="projects-stat-label">Downloads</span>
+          </div>
+          <div style="width:1px;background:var(--border)"></div>
+          <div class="projects-stat">
+            <span class="projects-stat-value" id="stat-storage">0 MB</span>
+            <span class="projects-stat-label">Storage Used</span>
+          </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+          <div class="search-wrap">
+            <div class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+            <input type="text" class="search-input" id="search-input" placeholder="Search projects..." oninput="filterProjects()" />
+          </div>
+          <select class="filter-select" id="filter-status" onchange="filterProjects()">
+            <option value="all">All Status</option>
+            <option value="success">Built</option>
+            <option value="failed">Failed</option>
+            <option value="none">No Builds</option>
+          </select>
+          <select class="filter-select" id="filter-sort" onchange="filterProjects()">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="name">Name A-Z</option>
+          </select>
+          <div class="view-toggle">
+            <button class="view-btn active" id="view-grid" onclick="setView('grid')" title="Grid View">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            </button>
+            <button class="view-btn" id="view-list" onclick="setView('list')" title="List View">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Projects Container -->
+        <div id="projects-container"></div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- New Project Modal -->
+  <div class="modal-overlay new-project-modal" id="modal-new-project">
+    <div class="modal">
+      <div class="modal-title">New Project</div>
+      <div class="modal-body" style="display:flex;flex-direction:column;gap:14px;margin-bottom:20px">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label style="font-size:0.72rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em">Project Name</label>
+          <input type="text" class="modal-input" id="np-name" placeholder="my_flutter_app" style="margin-bottom:0" />
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label style="font-size:0.72rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em">Package ID</label>
+          <input type="text" class="modal-input" id="np-package" placeholder="com.example.myapp" style="margin-bottom:0" />
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label style="font-size:0.72rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em">Description <span style="color:var(--text-muted);font-weight:400">(optional)</span></label>
+          <input type="text" class="modal-input" id="np-desc" placeholder="Short description..." style="margin-bottom:0" />
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-new-project')">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="createProject()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Create Project
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Context Menu -->
+  <div class="context-menu" id="project-context-menu">
+    <button class="context-item" onclick="ctxOpenEditor()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16,18 22,12 16,6"/><polyline points="8,6 2,12 8,18"/></svg>
+      Open in Editor
+    </button>
+    <button class="context-item" onclick="ctxBuild()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5,3 19,12 5,21"/></svg>
+      Build APK
+    </button>
+    <button class="context-item" onclick="ctxDownload()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/></svg>
+      Download APK
+    </button>
+    <div class="context-divider"></div>
+    <button class="context-item" onclick="ctxRename()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      Rename
+    </button>
+    <div class="context-divider"></div>
+    <button class="context-item danger" onclick="ctxDelete()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
+      Delete Project
+    </button>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" style="position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px 18px;font-size:0.82rem;color:var(--text-primary);box-shadow:var(--shadow-lg);opacity:0;transition:opacity 0.3s ease;pointer-events:none;"></div>
+
+  <script src="js/core/auth.js"></script>
+  <script src="js/projects.js"></script>
+
+</body>
+</html>

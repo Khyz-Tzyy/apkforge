@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>APKForge — Editor</title>
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/editor.css" />
+</head>
+<body class="noise">
+
+  <div class="editor-layout">
+
+    <!-- Top Bar -->
+    <div class="editor-topbar">
+      <div class="editor-topbar-left">
+        <a href="dashboard.html" class="editor-logo">
+          <svg viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="8" fill="#00d4ff" fill-opacity="0.1"/>
+            <path d="M8 24L16 8L24 24" stroke="#00d4ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10.5 19H21.5" stroke="#00d4ff" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="22" cy="10" r="3" fill="#ff6b35"/>
+          </svg>
+          APK<span class="logo-dot">Forge</span>
+        </a>
+        <div style="color:var(--text-muted);font-size:0.75rem">/</div>
+        <input type="text" class="project-name-input" id="project-name" value="my_flutter_app" placeholder="project_name" />
+      </div>
+
+      <div class="editor-topbar-center">
+        <span class="badge badge-warning" style="font-size:0.65rem">
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+          Early Dev
+        </span>
+        <span id="save-status" style="font-size:0.74rem;color:var(--text-muted)">All changes saved</span>
+      </div>
+
+      <div class="editor-topbar-right">
+        <button class="btn btn-ghost btn-sm" onclick="togglePanel('preview')" title="Toggle Preview">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          Preview
+        </button>
+        <button class="btn btn-ghost btn-sm" onclick="togglePanel('build')" title="Toggle Build">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
+          Build
+        </button>
+        <a href="dashboard.html" class="btn btn-ghost btn-sm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+      </div>
+    </div>
+
+    <!-- Editor Body -->
+    <div class="editor-body">
+
+      <!-- File Tree -->
+      <div class="filetree-panel" id="filetree-panel">
+        <div class="panel-header">
+          <span class="panel-title">Explorer</span>
+          <div class="panel-actions">
+            <button class="icon-btn" title="New File" onclick="showNewFileModal()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
+            </button>
+            <button class="icon-btn" title="New Folder" onclick="showNewFolderModal()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
+            </button>
+            <button class="icon-btn" title="Collapse All" onclick="collapseAll()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15,18 9,12 15,6"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="filetree" id="filetree"></div>
+      </div>
+
+      <div class="resizer" id="resizer-left"></div>
+
+      <!-- Code Panel -->
+      <div class="code-panel" id="code-panel">
+
+        <!-- Tabs -->
+        <div class="editor-tabs" id="editor-tabs">
+          <div style="padding:0 10px;display:flex;align-items:center;color:var(--text-muted);font-size:0.75rem">
+            No file open
+          </div>
+        </div>
+
+        <!-- Code Area -->
+        <div class="code-area">
+          <div class="line-numbers" id="line-numbers"></div>
+          <div class="code-editor-wrap">
+            <textarea
+              class="code-editor"
+              id="code-editor"
+              spellcheck="false"
+              autocorrect="off"
+              autocapitalize="off"
+              placeholder="// Select a file to start editing..."
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+          <div class="status-left">
+            <span class="status-item">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16,18 22,12 16,6"/><polyline points="8,6 2,12 8,18"/></svg>
+              <span id="status-lang">Dart</span>
+            </span>
+            <span class="status-item" id="status-cursor">Ln 1, Col 1</span>
+          </div>
+          <div class="status-right">
+            <span class="status-item">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+              Flutter 3.x
+            </span>
+            <span class="status-item">UTF-8</span>
+            <span class="status-item">Spaces: 2</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="resizer" id="resizer-right"></div>
+
+      <!-- Right Panel -->
+      <div class="right-panel" id="right-panel">
+        <div class="right-panel-tabs">
+          <button class="right-panel-tab active" onclick="switchRightTab('preview', this)">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:4px"><rect x="5" y="2" width="14" height="20" rx="2"/></svg>
+            Preview
+          </button>
+          <button class="right-panel-tab" onclick="switchRightTab('build', this)">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:4px"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
+            Build
+          </button>
+          <button class="right-panel-tab" onclick="switchRightTab('log', this)">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:4px"><polyline points="4,17 10,11 4,5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+            Log
+          </button>
+        </div>
+
+        <!-- Preview Tab -->
+        <div class="right-panel-content active" id="tab-preview">
+          <div class="preview-frame-wrap">
+            <div class="preview-phone">
+              <div class="preview-phone-notch"></div>
+              <div class="preview-phone-screen" id="preview-screen">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                <div>Preview will appear<br>after build</div>
+              </div>
+            </div>
+            <p class="preview-note">
+              Live preview is generated after a successful build. Code changes are reflected on next build.
+            </p>
+          </div>
+        </div>
+
+        <!-- Build Tab -->
+        <div class="right-panel-content" id="tab-build">
+          <div class="build-config">
+            <div class="build-field">
+              <label>App Name</label>
+              <input type="text" class="build-input" id="build-app-name" value="My Flutter App" placeholder="My App" />
+            </div>
+            <div class="build-field">
+              <label>Package ID</label>
+              <input type="text" class="build-input" id="build-package" value="com.example.myapp" placeholder="com.example.app" />
+            </div>
+            <div class="build-field">
+              <label>Version Name</label>
+              <input type="text" class="build-input" id="build-version" value="1.0.0" placeholder="1.0.0" />
+            </div>
+            <div class="build-field">
+              <label>Version Code</label>
+              <input type="number" class="build-input" id="build-vcode" value="1" min="1" />
+            </div>
+            <div class="build-field">
+              <label>Flutter Version</label>
+              <select class="build-input" id="build-flutter">
+                <option value="3.24">Flutter 3.24 (stable)</option>
+                <option value="3.22">Flutter 3.22</option>
+                <option value="3.19">Flutter 3.19</option>
+              </select>
+            </div>
+            <button class="build-btn" id="build-btn" onclick="startBuild()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5,3 19,12 5,21"/></svg>
+              Build APK
+            </button>
+          </div>
+
+          <!-- Build Progress -->
+          <div id="build-progress" style="padding:12px 14px;display:none;flex-direction:column;gap:8px;border-bottom:1px solid var(--border)">
+            <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.78rem">
+              <span style="color:var(--text-secondary)" id="build-step-label">Initializing...</span>
+              <span style="color:var(--text-muted)" id="build-pct">0%</span>
+            </div>
+            <div style="height:4px;background:var(--bg-elevated);border-radius:2px;overflow:hidden">
+              <div id="build-progress-bar" style="height:100%;background:linear-gradient(90deg,var(--accent),#0099cc);width:0%;transition:width 0.4s ease;border-radius:2px"></div>
+            </div>
+          </div>
+
+          <!-- Download Bar -->
+          <div class="download-bar" id="download-bar">
+            <div style="display:flex;align-items:center;gap:8px;font-size:0.78rem">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg>
+              <span style="color:var(--success);font-weight:700">Build successful!</span>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="downloadAPK()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download APK
+            </button>
+            <p style="font-size:0.7rem;color:var(--text-muted);text-align:center">Available for 7 days</p>
+          </div>
+        </div>
+
+        <!-- Log Tab -->
+        <div class="right-panel-content" id="tab-log">
+          <div class="build-log-wrap" id="build-log">
+            <div class="log-empty">
+              No build logs yet.<br>Start a build to see output here.
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Context Menu -->
+  <div class="context-menu" id="context-menu">
+    <button class="context-item" onclick="ctxRename()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      Rename
+    </button>
+    <button class="context-item" onclick="ctxNewFile()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
+      New File
+    </button>
+    <div class="context-divider"></div>
+    <button class="context-item danger" onclick="ctxDelete()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+      Delete
+    </button>
+  </div>
+
+  <!-- New File Modal -->
+  <div class="modal-overlay" id="modal-newfile">
+    <div class="modal">
+      <div class="modal-title">New File</div>
+      <input type="text" class="modal-input" id="modal-newfile-input" placeholder="filename.dart" />
+      <div class="modal-actions">
+        <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-newfile')">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="confirmNewFile()">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Folder Modal -->
+  <div class="modal-overlay" id="modal-newfolder">
+    <div class="modal">
+      <div class="modal-title">New Folder</div>
+      <input type="text" class="modal-input" id="modal-newfolder-input" placeholder="folder_name" />
+      <div class="modal-actions">
+        <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-newfolder')">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="confirmNewFolder()">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rename Modal -->
+  <div class="modal-overlay" id="modal-rename">
+    <div class="modal">
+      <div class="modal-title">Rename</div>
+      <input type="text" class="modal-input" id="modal-rename-input" placeholder="new_name" />
+      <div class="modal-actions">
+        <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-rename')">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="confirmRename()">Rename</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/core/auth.js"></script>
+  <script src="js/editor.js"></script>
+
+</body>
+</html>

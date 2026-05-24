@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>APKForge — Flutter APK Builder</title>
+  <meta name="description" content="Build Flutter APKs straight from your browser. No setup required." />
+  <link rel="stylesheet" href="pages/css/global.css" />
+  <link rel="stylesheet" href="pages/css/landing.css" />
+</head>
+<body class="noise grid-bg">
+
+  <!-- Dev Banner -->
+  <div class="dev-banner">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:6px"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    APKForge is currently in early development. System stability is not guaranteed. <span>Features may change without notice.</span>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a href="index.html" class="navbar-logo">
+      <svg class="logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="32" height="32" rx="8" fill="#00d4ff" fill-opacity="0.1"/>
+        <path d="M8 24L16 8L24 24" stroke="#00d4ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M10.5 19H21.5" stroke="#00d4ff" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="22" cy="10" r="3" fill="#ff6b35"/>
+      </svg>
+      APK<span class="logo-dot">Forge</span>
+    </a>
+
+    <div class="navbar-links">
+      <a href="#features">Features</a>
+      <a href="#how-it-works">How it works</a>
+      <a href="#limits">Limits</a>
+      <a href="pages/login.html">Login</a>
+    </div>
+
+    <div class="navbar-actions">
+      <a href="pages/login.html" class="btn btn-ghost btn-sm">Sign in</a>
+      <a href="pages/login.html?mode=register" class="btn btn-primary btn-sm">Get Started</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="hero-orb hero-orb-1"></div>
+      <div class="hero-orb hero-orb-2"></div>
+    </div>
+
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-eyebrow">
+          <span class="hero-eyebrow-dot"></span>
+          Free during early access
+        </div>
+
+        <h1 class="hero-title">
+          <span class="line-1">Forge your Flutter</span>
+          <span class="line-2">APK in seconds</span>
+        </h1>
+
+        <p class="hero-desc">
+          Write Flutter code, configure your build, and ship your APK — 
+          all from your browser. No local setup, no SDK installation, no headaches.
+        </p>
+
+        <div class="hero-actions">
+          <a href="pages/login.html?mode=register" class="btn btn-primary btn-lg">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5,3 19,12 5,21"/></svg>
+            Start Building Free
+          </a>
+          <a href="#how-it-works" class="btn btn-secondary btn-lg">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Learn More
+          </a>
+        </div>
+
+        <div class="hero-stats">
+          <div>
+            <div class="hero-stat-value text-accent">7x</div>
+            <div class="hero-stat-label">Builds per 2 days</div>
+          </div>
+          <div>
+            <div class="hero-stat-value">Free</div>
+            <div class="hero-stat-label">During early access</div>
+          </div>
+          <div>
+            <div class="hero-stat-value">7 days</div>
+            <div class="hero-stat-label">APK stored</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mockup -->
+    <div class="hero-visual">
+      <div class="hero-mockup">
+        <div class="mockup-titlebar">
+          <div class="mockup-dots">
+            <div class="mockup-dot"></div>
+            <div class="mockup-dot"></div>
+            <div class="mockup-dot"></div>
+          </div>
+          <span class="mockup-title">main.dart — APKForge Editor</span>
+        </div>
+        <div class="mockup-body">
+          <div class="mockup-line"><span class="mockup-ln">1</span><span class="mockup-kw">import </span><span class="mockup-str">'package:flutter/material.dart'</span><span class="mockup-var">;</span></div>
+          <div class="mockup-line"><span class="mockup-ln">2</span></div>
+          <div class="mockup-line"><span class="mockup-ln">3</span><span class="mockup-kw">void </span><span class="mockup-fn">main</span><span class="mockup-var">() {</span></div>
+          <div class="mockup-line"><span class="mockup-ln">4</span><span class="mockup-var">&nbsp;&nbsp;</span><span class="mockup-fn">runApp</span><span class="mockup-var">(</span><span class="mockup-kw">const </span><span class="mockup-fn">MyApp</span><span class="mockup-var">());</span></div>
+          <div class="mockup-line"><span class="mockup-ln">5</span><span class="mockup-var">}</span></div>
+          <div class="mockup-line"><span class="mockup-ln">6</span></div>
+          <div class="mockup-line"><span class="mockup-ln">7</span><span class="mockup-cm">// APKForge — building your app...</span></div>
+          <div class="mockup-line"><span class="mockup-ln">8</span><span class="mockup-kw">class </span><span class="mockup-fn">MyApp </span><span class="mockup-kw">extends </span><span class="mockup-fn">StatelessWidget </span><span class="mockup-var">{</span></div>
+          <div class="mockup-line"><span class="mockup-ln">9</span><span class="mockup-var">&nbsp;&nbsp;</span><span class="mockup-kw">const </span><span class="mockup-fn">MyApp</span><span class="mockup-var">({</span><span class="mockup-kw">super</span><span class="mockup-var">.key});</span></div>
+          <div class="mockup-line"><span class="mockup-ln">10</span></div>
+          <div class="mockup-line"><span class="mockup-ln">11</span><span class="mockup-var">&nbsp;&nbsp;@</span><span class="mockup-fn">override</span></div>
+          <div class="mockup-line"><span class="mockup-ln">12</span><span class="mockup-var">&nbsp;&nbsp;</span><span class="mockup-fn">Widget </span><span class="mockup-fn">build</span><span class="mockup-var">(</span><span class="mockup-fn">BuildContext </span><span class="mockup-var">context) {</span></div>
+          <div class="mockup-line"><span class="mockup-ln">13</span><span class="mockup-var">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mockup-kw">return </span><span class="mockup-fn">MaterialApp</span><span class="mockup-var">(</span></div>
+          <div class="mockup-line"><span class="mockup-ln">14</span><span class="mockup-var">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;title: </span><span class="mockup-str">'My App'</span><span class="mockup-var">,</span></div>
+          <div class="mockup-line"><span class="mockup-ln">15</span><span class="mockup-var">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="mockup-cm">// ...</span></div>
+        </div>
+        <div class="mockup-footer">
+          <div class="mockup-status"></div>
+          <span style="color:var(--success)">Build ready</span>
+          <span style="color:var(--text-muted);margin-left:auto">Flutter 3.x · Dart 3.x</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">Features</div>
+        <h2 class="section-title">Everything you need to ship</h2>
+        <p class="section-desc">A complete Flutter build environment in your browser. Write, preview, build, and download — no install required.</p>
+      </div>
+
+      <div class="features-grid">
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16,18 22,12 16,6"/><polyline points="8,6 2,12 8,18"/></svg>
+          </div>
+          <div class="feature-title">Web Code Editor</div>
+          <p class="feature-desc">Full-featured code editor with syntax highlighting, file tree navigation, and Flutter-aware completions.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          </div>
+          <div class="feature-title">Live APK Preview</div>
+          <p class="feature-desc">See a live preview of your app UI as you code. Know what your APK will look like before you build it.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+          </div>
+          <div class="feature-title">APK Analyzer</div>
+          <p class="feature-desc">Upload any APK and instantly extract its source structure. Browse files, read manifests, inspect resources.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
+          </div>
+          <div class="feature-title">Real-time Build Logs</div>
+          <p class="feature-desc">Watch your build process live with streaming logs. Know exactly what's happening at every step.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+          </div>
+          <div class="feature-title">Project Management</div>
+          <p class="feature-desc">Save and manage multiple Flutter projects. Resume where you left off, track build history, redownload APKs.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          </div>
+          <div class="feature-title">Secure Auth</div>
+          <p class="feature-desc">Your projects are private to your account. Full auth system with session management and account protection.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="section" id="how-it-works" style="background: var(--bg-secondary); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">How it works</div>
+        <h2 class="section-title">Build an APK in 4 steps</h2>
+        <p class="section-desc">From zero to downloadable APK — no local tools needed.</p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-item">
+          <div class="step-number">01</div>
+          <div class="step-title">Create Account</div>
+          <p class="step-desc">Sign up for free. No credit card, no verification. Just an email and password.</p>
+        </div>
+        <div class="step-item">
+          <div class="step-number">02</div>
+          <div class="step-title">Write Your Code</div>
+          <p class="step-desc">Use the built-in editor to write your Flutter app. Create files, organize folders, add dependencies.</p>
+        </div>
+        <div class="step-item">
+          <div class="step-number">03</div>
+          <div class="step-title">Configure & Build</div>
+          <p class="step-desc">Set your app name, package ID, version. Hit build and watch the logs roll in real-time.</p>
+        </div>
+        <div class="step-item">
+          <div class="step-number">04</div>
+          <div class="step-title">Download APK</div>
+          <p class="step-desc">Your APK is ready. Download it directly or come back within 7 days to grab it again.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Limits -->
+  <section class="section" id="limits">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">Free Plan Limits</div>
+        <h2 class="section-title">Fair limits, all free</h2>
+        <p class="section-desc">APKForge is completely free during early access. Here's what you get.</p>
+      </div>
+
+      <div style="max-width:640px; margin: 0 auto;">
+        <div class="card card-accent">
+          <table class="limit-table">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>Free Plan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>APK Builds</td>
+                <td><span class="badge badge-accent">7x per 2 days</span></td>
+              </tr>
+              <tr>
+                <td>APK Storage Duration</td>
+                <td>7 days (auto-deleted)</td>
+              </tr>
+              <tr>
+                <td>APK Analyzer</td>
+                <td><span class="badge badge-accent">2x per day</span></td>
+              </tr>
+              <tr>
+                <td>Projects</td>
+                <td>Unlimited</td>
+              </tr>
+              <tr>
+                <td>File Editor</td>
+                <td><span class="check">✓</span> Included</td>
+              </tr>
+              <tr>
+                <td>Build Logs</td>
+                <td><span class="check">✓</span> Real-time</td>
+              </tr>
+              <tr>
+                <td>Live Preview</td>
+                <td><span class="check">✓</span> Included</td>
+              </tr>
+              <tr>
+                <td>Price</td>
+                <td><span class="badge badge-success">Free</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="text-align:center; margin-top:16px; font-size:0.78rem; color:var(--text-muted)">
+          Paid plans coming soon. Early users will receive exclusive discounts.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container">
+      <h2 class="cta-title">Ready to forge your APK?</h2>
+      <p class="cta-desc">Free during early access. No setup. No install. Just open your browser and start building.</p>
+      <a href="pages/login.html?mode=register" class="btn btn-primary btn-lg">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5,3 19,12 5,21"/></svg>
+        Create Free Account
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-logo">APK<span>Forge</span></div>
+        <div class="footer-links">
+          <a href="#">Contact Admin</a>
+          <a href="#">Telegram</a>
+          <a href="#">Status</a>
+          <a href="#">Privacy</a>
+        </div>
+        <div class="footer-copy">© 2025 APKForge. Early Access.</div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

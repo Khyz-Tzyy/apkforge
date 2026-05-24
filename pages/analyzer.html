@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>APKForge — APK Analyzer</title>
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="css/analyzer.css" />
+</head>
+<body class="noise">
+
+  <div class="app-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="sidebar-logo">
+          <svg viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="8" fill="#00d4ff" fill-opacity="0.1"/>
+            <path d="M8 24L16 8L24 24" stroke="#00d4ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10.5 19H21.5" stroke="#00d4ff" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="22" cy="10" r="3" fill="#ff6b35"/>
+          </svg>
+          APK<span class="logo-dot">Forge</span>
+        </a>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+        <a href="projects.html" class="nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+          Projects
+        </a>
+        <a href="editor.html" class="nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16,18 22,12 16,6"/><polyline points="8,6 2,12 8,18"/></svg>
+          Editor
+          <span class="nav-badge">NEW</span>
+        </a>
+        <a href="analyzer.html" class="nav-item active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+          APK Analyzer
+        </a>
+        <div class="nav-section-label">Account</div>
+        <a href="#" class="nav-item" onclick="showToast('Settings coming soon!')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2M12 20v2M20 12h2M2 12h2M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41"/></svg>
+          Settings
+        </a>
+        <button class="nav-item" onclick="Auth.logout()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Sign Out
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="user-avatar" id="user-avatar">U</div>
+          <div class="user-info">
+            <div class="user-name" id="user-name">User</div>
+            <div class="user-plan">Free Plan</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="main-content">
+
+      <!-- Topbar -->
+      <div class="topbar">
+        <div style="display:flex;align-items:center;gap:12px">
+          <button class="btn btn-ghost btn-sm" id="sidebar-toggle" onclick="toggleSidebar()" style="display:none">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <span class="topbar-title">APK Analyzer</span>
+        </div>
+        <div class="topbar-actions">
+          <div class="badge badge-warning" style="font-size:0.68rem">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+            Early Dev
+          </div>
+          <span id="usage-badge" class="badge badge-muted" style="font-size:0.68rem">2 / 2 daily uses</span>
+        </div>
+      </div>
+
+      <!-- Page Content -->
+      <div class="page-content" style="overflow-y:auto">
+
+        <div class="page-header animate-fade" style="margin-bottom:16px">
+          <div>
+            <div class="page-title">APK Analyzer</div>
+            <div class="page-subtitle">Upload any APK to extract its structure, manifest, permissions and more</div>
+          </div>
+        </div>
+
+        <div class="analyzer-layout">
+
+          <!-- Left: Upload + Info -->
+          <div class="analyzer-left">
+
+            <!-- Limit notice -->
+            <div class="card" style="padding:12px 16px;display:flex;align-items:center;gap:10px;font-size:0.78rem">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <span style="color:var(--text-secondary)">Free plan: <strong style="color:var(--text-primary)">2 analyzes per day</strong>. Resets at midnight.</span>
+              <span id="uses-left" class="badge badge-accent" style="margin-left:auto;font-size:0.68rem">2 left</span>
+            </div>
+
+            <!-- Drop Zone -->
+            <div class="drop-zone" id="drop-zone">
+              <input type="file" accept=".apk" id="apk-input" onchange="handleFileSelect(event)" />
+              <div class="drop-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+              </div>
+              <div class="drop-title">Drop your APK here</div>
+              <div class="drop-desc">or click to browse your files</div>
+              <div class="drop-limit">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Max 100MB · .apk files only
+              </div>
+            </div>
+
+            <!-- APK Info Card -->
+            <div class="apk-info-card" id="apk-info-card">
+              <div class="apk-info-header">
+                <div class="apk-file-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+                </div>
+                <div>
+                  <div class="apk-file-name" id="apk-filename">app-release.apk</div>
+                  <div class="apk-file-size" id="apk-filesize">0 MB</div>
+                </div>
+                <button class="btn btn-ghost btn-sm" onclick="resetAnalyzer()" style="margin-left:auto">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1,4 1,10 7,10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+                  Reset
+                </button>
+              </div>
+
+              <div class="apk-details-grid" id="apk-details-grid">
+                <!-- filled by JS -->
+              </div>
+
+              <button class="btn btn-primary" id="analyze-btn" onclick="startAnalysis()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                Analyze APK
+              </button>
+            </div>
+
+            <!-- Analyze Progress -->
+            <div class="analyze-progress" id="analyze-progress">
+              <div style="font-size:0.82rem;font-weight:700;color:var(--text-primary);margin-bottom:4px;font-family:var(--font-display)">Analyzing...</div>
+              <div id="analyze-steps"></div>
+            </div>
+
+          </div>
+
+          <!-- Right: Results -->
+          <div class="analyzer-right" id="analyzer-right">
+
+            <!-- Empty state -->
+            <div class="analyzer-empty" id="analyzer-empty">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+              <div class="analyzer-empty-title">No APK analyzed yet</div>
+              <div class="analyzer-empty-desc">Upload an APK file on the left to inspect its contents, permissions, and source structure.</div>
+            </div>
+
+            <!-- Results (hidden until analyzed) -->
+            <div id="analyzer-results" style="display:none;flex-direction:column;height:100%">
+
+              <div class="analyzer-tree-header">
+                <span class="analyzer-tree-title" id="result-apk-name">app.apk</span>
+                <span class="badge badge-success" style="font-size:0.68rem">Analysis complete</span>
+              </div>
+
+              <div class="analyzer-tree-tabs">
+                <button class="analyzer-tab active" onclick="switchAnalyzerTab('files', this)">Files</button>
+                <button class="analyzer-tab" onclick="switchAnalyzerTab('manifest', this)">Manifest</button>
+                <button class="analyzer-tab" onclick="switchAnalyzerTab('permissions', this)">Permissions</button>
+                <button class="analyzer-tab" onclick="switchAnalyzerTab('strings', this)">Strings</button>
+              </div>
+
+              <!-- Files Tab -->
+              <div class="analyzer-content active" id="atab-files">
+                <div class="analyzer-filetree" id="atree-files"></div>
+              </div>
+
+              <!-- Manifest Tab -->
+              <div class="analyzer-content" id="atab-manifest">
+                <div class="file-viewer">
+                  <div class="file-viewer-header">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
+                    AndroidManifest.xml
+                  </div>
+                  <div class="file-viewer-body" id="manifest-content"></div>
+                </div>
+              </div>
+
+              <!-- Permissions Tab -->
+              <div class="analyzer-content" id="atab-permissions">
+                <div class="perm-list" id="perm-list"></div>
+              </div>
+
+              <!-- Strings Tab -->
+              <div class="analyzer-content" id="atab-strings">
+                <div class="file-viewer">
+                  <div class="file-viewer-header">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
+                    strings.xml (res/values)
+                  </div>
+                  <div class="file-viewer-body" id="strings-content"></div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" style="position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px 18px;font-size:0.82rem;color:var(--text-primary);box-shadow:var(--shadow-lg);opacity:0;transition:opacity 0.3s ease;pointer-events:none;"></div>
+
+  <script src="js/core/auth.js"></script>
+  <script src="js/analyzer.js"></script>
+
+</body>
+</html>
