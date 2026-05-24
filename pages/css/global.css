@@ -442,3 +442,101 @@ h1, h2, h3, h4, h5, h6 {
   .navbar-links { display: none; }
   .container { padding: 0 16px; }
 }
+
+/* ── Modal (Global) ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-overlay.visible { display: flex; }
+
+.modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 28px;
+  width: 360px;
+  max-width: 92vw;
+  box-shadow: var(--shadow-lg);
+  animation: fadeIn 0.2s ease forwards;
+}
+
+.modal-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  font-family: var(--font-display);
+}
+
+.modal-input {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  font-family: var(--font-mono);
+  margin-bottom: 16px;
+  transition: var(--transition);
+}
+
+.modal-input:focus {
+  border-color: var(--border-accent);
+  box-shadow: 0 0 0 2px var(--accent-dim);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* ── Context Menu (Global) ── */
+.context-menu {
+  position: fixed;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 4px;
+  z-index: 999;
+  min-width: 160px;
+  max-width: 200px;
+  box-shadow: var(--shadow-lg);
+  display: none;
+}
+
+.context-menu.visible { display: block; }
+
+.context-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  border: none;
+  background: none;
+  width: 100%;
+  font-family: var(--font-mono);
+}
+
+.context-item:hover { background: var(--bg-card); color: var(--text-primary); }
+.context-item.danger:hover { color: var(--danger); }
+.context-item svg { width: 13px; height: 13px; }
+
+.context-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 4px 0;
+}
